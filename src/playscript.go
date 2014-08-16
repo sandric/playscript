@@ -16,9 +16,9 @@ func openTTY() int {
 }
 func ioctl(fd int, request, argp uintptr) error {
 	_, _, errorp := syscall.Syscall(
-		syscall.SYS_IOCTL, 
-		uintptr(fd), 
-		request, 
+		syscall.SYS_IOCTL,
+		uintptr(fd),
+		request,
 		argp)
 
 	return os.NewSyscallError("ioctl", errorp)
@@ -29,21 +29,20 @@ func printText(text string) error {
 	var data = [] byte(text)
 
 	for _, byte := range data {
-		if  err := ioctl(fd, 
-					 	 syscall.TIOCSTI, 
-						 uintptr(unsafe.Pointer(&byte)));
+		if  err := ioctl(fd,
+			syscall.TIOCSTI,
+			uintptr(unsafe.Pointer(&byte)));
 			err != err {
-				fmt.Println(err)
-				return err
-			} else {
-				time.Sleep(200 * time.Millisecond)
-			}
+			fmt.Println(err)
+			return err
+		} else {
+			time.Sleep(200 * time.Millisecond)
+		}
 	}
 
 	return errors.New("all done")
 }
 
 func main() {
-
 	printText("ls -la\n")
 }
